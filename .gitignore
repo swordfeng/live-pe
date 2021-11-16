@@ -1,3 +1,9 @@
+image/
+
 debian/*
 !debian/gen.sh
 !debian/clean.sh
+
+ucode/*
+!ucode/gen.sh
+!ucode/clean.sh
