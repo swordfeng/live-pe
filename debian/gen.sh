@@ -1,4 +1,5 @@
 #!/bin/sh
+[ ! -e "$project" ] && echo '$project is not defined!' && exit
 
 fetch_keyring() {
     version=$(curl https://deb.debian.org/debian/dists/stable/InRelease | perl -n -e'/^Version: ([0-9]+).*$/ && print $1')
@@ -72,31 +73,31 @@ cleanup() {
 }
 
 gen_squashfs() {
-    [ -e filesystem.squashfs ] && rm filesystem.squashfs
+    rm "$project/image/live/filesystem.squashfs"
     if [ x$env = xrelease ]; then
-        mksquashfs liveroot filesystem.squashfs -comp xz -Xbcj x86 -Xdict-size 100%
+        mksquashfs liveroot "$project/image/live/filesystem.squashfs" -comp xz -Xbcj x86 -Xdict-size 100%
     else
-        mksquashfs liveroot filesystem.squashfs -comp zstd -Xcompression-level 3
+        mksquashfs liveroot "$project/image/live/filesystem.squashfs" -comp zstd -Xcompression-level 3
     fi
 }
 
 gen_kernel() {
-    [ -e vmlinuz ] && rm initrd.img vmlinuz
-    cp liveroot/boot/initrd.img-* initrd.img
-    cp liveroot/boot/vmlinuz-* vmlinuz
+    rm "$project/image/live/"{initrd.img,vmlinuz}
+    cp liveroot/boot/initrd.img-* "$project/image/live/initrd.img"
+    cp liveroot/boot/vmlinuz-* "$project/image/live/vmlinuz"
 }
 
-[ ! -e "$project" ] && echo '$project is not defined!' && exit
 
 cd "$project/debian"
 
 [ ! -e keyring.gpg ] && fetch_keyring
 
-[ ! -e liveroot ] && sudo bash -c "$(declare -f init); init" && \
-    sudo chroot liveroot/ /bin/bash -c "$(declare -f chroot_setup); chroot_setup"
+[ ! -e liveroot ] && sudo -E bash -c "$(declare -f init); init" && \
+    sudo -E chroot liveroot/ /bin/bash -c "$(declare -f chroot_setup); chroot_setup"
 
-sudo bash -c "$(declare -f cleanup); cleanup"
-sudo bash -c "$(declare -f gen_squashfs); gen_squashfs"
-sudo bash -c "$(declare -f gen_kernel); gen_kernel"
+mkdir -p "$project/image/live"
+sudo -E bash -c "$(declare -f cleanup); cleanup"
+sudo -E bash -c "$(declare -f gen_squashfs); gen_squashfs"
+sudo -E bash -c "$(declare -f gen_kernel); gen_kernel"
 
-printf $(sudo du -sx --block-size=1 liveroot | cut -f1) > filesystem.size
+printf $(sudo du -sx --block-size=1 liveroot | cut -f1) > "$project/image/live/filesystem.size"
