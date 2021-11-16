@@ -1,2 +1,3 @@
-liveroot/
-
+debian/*
+!debian/gen.sh
+!debian/clean.sh
