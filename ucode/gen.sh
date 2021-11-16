@@ -1,5 +1,5 @@
 #!/bin/bash
-[ ! -e "$project" ] && echo '$project is not defined!' && exit
+[ ! -e "$project" ] && echo '$project is not defined!' && exit 1
 
 intel_ucode_ver=20210608
 amd_ucode_ver=20211027

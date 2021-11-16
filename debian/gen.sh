@@ -1,5 +1,5 @@
 #!/bin/sh
-[ ! -e "$project" ] && echo '$project is not defined!' && exit
+[ ! -e "$project" ] && echo '$project is not defined!' && exit 1
 
 fetch_keyring() {
     version=$(curl https://deb.debian.org/debian/dists/stable/InRelease | perl -n -e'/^Version: ([0-9]+).*$/ && print $1')
