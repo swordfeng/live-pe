@@ -2,6 +2,9 @@
 !debian/
 !ucode/
 !boot/
+!hostname
+!search_file
+!makeiso.sh
 
 debian/*
 !debian/gen.sh
