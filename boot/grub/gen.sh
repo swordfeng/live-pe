@@ -25,7 +25,7 @@ grub-mkstandalone \
    --locales="" \
    --fonts="" \
    --themes="" \
-   boot/grub/grub.cfg=grub-debian.cfg
+   boot/grub/grub.cfg=generated/grub-debian.cfg
 
 # MBR Grub
 m4 -DSEARCH_FILE=$(cat ../../search_file) grub-mbr.cfg.m4 > generated/grub-mbr.cfg

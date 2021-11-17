@@ -14,9 +14,3 @@ menuentry "Windows PE" {
     search --set=root --no-floppy --file /boot/SEARCH_FILE
     ntldr /boot/bootmgr
 }
-
-menuentry "Grub2 File Manager" {
-    search --set=root --no-floppy --file /boot/SEARCH_FILE
-    linux /grubfm/loadfm
-    initrd /grubfm/grubfm.iso
-}

@@ -4,8 +4,10 @@ export project=$(dirname "$(readlink -f "$0")")
 
 cd "$project"
 
+rm -rf image
 debian/gen.sh
 ucode/gen.sh
+winpe/gen.sh
 boot/gen.sh
 
 FILE="LIVE_PE_$(date -u +%Y%m%d_%H%M%S).iso"

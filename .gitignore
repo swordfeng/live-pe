@@ -1,5 +1,6 @@
 *
 !debian/
+!winpe/
 !ucode/
 !boot/
 !hostname
@@ -10,6 +11,9 @@ debian/*
 !debian/gen.sh
 !debian/clean.sh
 
+winpe/*
+!winpe/gen.sh
+
 ucode/*
 !ucode/gen.sh
 !ucode/clean.sh
@@ -19,6 +23,7 @@ boot/*
 !boot/clean.sh
 !boot/grub
 !boot/refind
+!boot/bootmgr
 
 boot/grub/*
 !boot/grub/gen.sh
@@ -28,3 +33,6 @@ boot/grub/*
 boot/refind/*
 !boot/refind/gen.sh
 !boot/refind/refind.conf
+
+boot/bootmgr/*
+!boot/bootmgr/gen.bat

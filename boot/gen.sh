@@ -1,10 +1,13 @@
 #!/bin/bash
 [ ! -e "$project" ] && echo '$project is not defined!' && exit 1
+[ ! -e "$project/image/boot/bootmgfw.efi" ] && echo 'Please run winpe/gen.sh first!' && exit 1
 
 cd "$project/boot"
 grub/gen.sh || exit 1
 refind/gen.sh || exit 1
 
+cd "$project/boot"
+rm -rf generated
 mkdir -p generated/esp/EFI/grub
 cp grub/generated/EFI/grub/debian.efi generated/esp/EFI/grub/debian.efi || exit 1
 
@@ -12,8 +15,8 @@ mkdir -p generated/esp/EFI/boot
 cp refind/generated/EFI/refind/refind.efi generated/esp/EFI/boot/bootx64.efi || exit 1
 cp refind/generated/EFI/refind/refind.conf generated/esp/EFI/boot/refind.conf || exit 1
 
-# mkdir -p generated/esp/EFI/microsoft/boot
-# cp ../image/efi/microsoft/boot/bootmgr.efi generated/esp/EFI/microsoft/boot/bootmgr.efi || exit 1
+mkdir -p generated/esp/EFI/winpe
+cp ../image/boot/bootmgfw.efi generated/esp/EFI/winpe/bootmgfw.efi || exit 1
 
 # mkdir -p generated/esp/grubfm
 # cp ../image/grubfm/grubfmx64.efi generated/esp/grubfm/grubfmx64.efi || exit 1
@@ -40,6 +43,14 @@ mkfs.vfat -v "$project/image/boot/efiboot.img" && \
 
 cp grub/generated/boot.img "$project/image/boot/boot.img" || exit 1
 
-cp grub/grub-usb.cfg "$project/image/boot/grub.cfg" || exit 1
+mkdir -p "$project/image/boot/grub"
+cp grub/grub-usb.cfg "$project/image/boot/grub/grub.cfg" || exit 1
+
+cp bootmgr/generated/bcd "$project/image/boot/bcd" || exit 1
+mkdir -p "$project/image/efi/microsoft/boot"
+cp bootmgr/generated/bcd_efi "$project/image/efi/microsoft/boot/bcd" || exit 1
+
+[ ! -e wimboot ] && curl -o wimboot -L https://github.com/ipxe/wimboot/releases/latest/download/wimboot
+cp wimboot "$project/image/boot/wimboot"
 
 touch "$project/image/boot/$(cat "$project/search_file")"
