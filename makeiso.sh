@@ -1,6 +1,6 @@
 #!/bin/bash
 
-[ ! -e "$project" ] && echo '$project is not defined!' && exit
+export project=$(dirname "$(readlink -f "$0")")
 
 cd "$project"
 
@@ -19,10 +19,6 @@ sudo xorriso \
    --eltorito-catalog boot/boot.cat \
    --grub2-boot-info --grub2-mbr /usr/lib/grub/i386-pc/boot_hybrid.img \
    -eltorito-alt-boot -e boot/efiboot.img -no-emul-boot \
-   -append_partition 2 0xef ../boot/generated/efiboot.img \
-   -graft-points \
-      "." \
-      /boot/boot.img=../boot/generated/boot.img \
-      /boot/efiboot.img=../boot/generated/efiboot.img
-      /boot/grub.cfg=../boot/grub/grub-usb.cf
+   -append_partition 2 0xef boot/efiboot.img \
+   -graft-points .
 ln -sf "${FILE}" ../LIVE_PE.iso

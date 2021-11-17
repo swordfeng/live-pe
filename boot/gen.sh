@@ -24,11 +24,12 @@ cp refind/generated/EFI/refind/refind.conf generated/esp/EFI/boot/refind.conf ||
 export LC_CTYPE=C
 
 # first pass to get size
-rm generated/efiboot.img
+[ -e generated/efiboot.img ] && rm generated/efiboot.img
 truncate -s 16M generated/efiboot.img
 mkfs.vfat generated/efiboot.img && \
     mcopy -i generated/efiboot.img -s ./generated/esp/* :: || exit 1
 img_size=$(du -k generated/efiboot.img | cut -f1)
+rm generated/efiboot.img
 
 # second pass to create image
 mkdir -p "$project/image/boot"
@@ -38,5 +39,7 @@ mkfs.vfat -v "$project/image/boot/efiboot.img" && \
     mcopy -i "$project/image/boot/efiboot.img" -s ./generated/esp/* :: || exit 1
 
 cp grub/generated/boot.img "$project/image/boot/boot.img" || exit 1
+
+cp grub/grub-usb.cfg "$project/image/boot/grub.cfg" || exit 1
 
 touch "$project/image/boot/$(cat "$project/search_file")"
