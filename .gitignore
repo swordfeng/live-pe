@@ -1,4 +1,7 @@
-image/
+*
+!debian/
+!ucode/
+!boot/
 
 debian/*
 !debian/gen.sh
