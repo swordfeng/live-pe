@@ -1,6 +1,6 @@
 #!/bin/bash
 [ ! -e "$project" ] && echo '$project is not defined!' && exit 1
-[ ! -e "$project/image/boot/bootmgfw.efi" ] && echo 'Please run winpe/gen.sh first!' && exit 1
+[ ! -e "$project/image/boot/bootmgr" ] && echo 'Please run winpe/gen.sh first!' && exit 1
 
 cd "$project/boot"
 grub/gen.sh || exit 1
@@ -16,7 +16,7 @@ cp refind/generated/EFI/refind/refind.efi generated/esp/EFI/boot/bootx64.efi || 
 cp refind/generated/EFI/refind/refind.conf generated/esp/EFI/boot/refind.conf || exit 1
 
 mkdir -p generated/esp/EFI/winpe
-cp ../image/boot/bootmgfw.efi generated/esp/EFI/winpe/bootmgfw.efi || exit 1
+cp ../image/efi/microsoft/boot/bootx64.efi generated/esp/EFI/winpe/bootmgfw.efi || exit 1
 
 # mkdir -p generated/esp/grubfm
 # cp ../image/grubfm/grubfmx64.efi generated/esp/grubfm/grubfmx64.efi || exit 1
